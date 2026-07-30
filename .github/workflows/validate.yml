@@ -1,0 +1,44 @@
+name: Validate Codmes plugin
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout KNU plugin
+        uses: actions/checkout@v6
+        with:
+          path: plugin
+
+      - name: Checkout Codmes validator
+        uses: actions/checkout@v6
+        with:
+          repository: jeongu0569-ui/Codmes
+          ref: 2cebf45455aca6e204eaef3417a1fd9161f37b9e
+          path: codmes
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: Install validator dependencies
+        working-directory: codmes
+        run: npm install --ignore-scripts
+
+      - name: Validate manifest and install package
+        run: |
+          node codmes/bin/codmes.mjs plugin install \
+            "$GITHUB_WORKSPACE/plugin" \
+            --root "$RUNNER_TEMP/CodmesWorkspace"
+          node codmes/bin/codmes.mjs plugin list \
+            --root "$RUNNER_TEMP/CodmesWorkspace"
