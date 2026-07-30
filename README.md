@@ -74,11 +74,16 @@ Marketplace에는 이 Git 저장소 자체가 아니라 `plugin.json`, `surface.
 
 배포 순서는 다음과 같습니다.
 
-1. KNU API와 플러그인의 데이터 계약을 검증합니다.
-2. 플러그인 버전을 올리고 Codmes 설치 테스트를 실행합니다.
-3. Publisher 키로 package를 서명합니다.
-4. GitHub Release에 package를 첨부합니다.
-5. Codmes Marketplace Registry의 버전, SHA-256과 다운로드 주소를 갱신합니다.
+1. KNU API와 플러그인의 데이터 계약을 로컬에서 확인합니다.
+2. 플러그인 버전을 올리고 설치 테스트를 실행합니다.
+3. Publisher 키로 `.codmes-plugin` package를 서명합니다.
+4. package와 Registry 변경을 Codmes Marketplace에 Pull Request로 제출합니다.
+5. Marketplace의 공식 Actions가 manifest, 권한, SHA-256, Publisher 서명을
+   최종 검증합니다.
+
+이 저장소의 CI는 Codmes 저장소를 checkout하지 않습니다. Community plugin은
+개인이나 외부 조직이 소유할 수 있으며, 공식 검증 책임은 Marketplace PR에
+있습니다.
 
 일반 사용자는 소스 저장소를 복제하지 않고 Codmes Marketplace에서 KNU를
 설치하거나 업데이트합니다.
