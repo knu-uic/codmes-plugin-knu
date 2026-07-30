@@ -38,15 +38,7 @@ source ../../.venv/bin/activate
 python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
 ```
 
-KNU 서버의 `MCP_AUTH_TOKEN`과 같은 값을 Codmes Workspace의 서버 전용 credential로
-등록합니다.
-
-```sh
-printf '%s' "$MCP_AUTH_TOKEN" |
-  codmes mcp credential set knu --root /path/to/CodmesWorkspace
-```
-
-그다음 이 저장소의 루트를 로컬 플러그인으로 설치합니다.
+이 저장소의 루트를 로컬 플러그인으로 설치합니다.
 
 ```sh
 cd /path/to/Codmes
@@ -64,8 +56,14 @@ node bin/codmes.mjs plugin install \
   --root /path/to/CodmesWorkspace
 ```
 
-실제 MCP 토큰은 manifest에 들어가지 않습니다. KNU 서버는 자체 환경설정에,
-Codmes 서버는 Workspace의 `.codmes/config/auth.json`에 각각 보관합니다.
+설치 후 KNU 설정에서 포털 학번과 비밀번호로 로그인하면 KNU 서버가 사용자별
+세션 토큰을 발급합니다. Codmes Workspace 서버는 이 토큰을 Surface와 MCP에
+공유하므로 일반 사용자가 `MCP_AUTH_TOKEN`을 알거나 직접 입력할 필요가 없습니다.
+로그아웃하면 KNU 서버의 현재 세션을 폐기한 뒤 Codmes 서버에 저장된 두 credential도
+함께 삭제합니다.
+
+`MCP_AUTH_TOKEN`은 KNU 서버 운영자가 loopback MCP 게이트웨이를 점검할 때만 쓰는
+내부용 비밀값입니다. 일반 사용자 설치 정보나 plugin manifest에 포함하지 않습니다.
 
 ## Marketplace 배포
 

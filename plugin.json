@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "kr.ac.kongju.knu",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "name": "KNU",
   "description": "공주대학교 공지 Surface와 Codmes용 검색 도구를 함께 제공합니다.",
   "publisher": "KNU AI Assistant",
@@ -27,6 +27,7 @@
       "type": "password",
       "credentialId": "knu-user-session",
       "loginPath": "/api/auth/portal-login",
+      "logoutPath": "/api/auth/logout",
       "statusPath": "/api/me",
       "usernameField": "student_id",
       "passwordField": "password",
@@ -41,7 +42,7 @@
     "surfaces": [
       "knu"
     ],
-    "credentialId": "knu",
+    "credentialId": "knu-user-session",
     "requiresApproval": true
   }
 }
