@@ -21,7 +21,7 @@ jobs:
       - name: Checkout Codmes validator
         uses: actions/checkout@v6
         with:
-          repository: jeongu0569-ui/Codmes
+          repository: knu-uic/Codmes
           ref: 2cebf45455aca6e204eaef3417a1fd9161f37b9e
           path: codmes
 
