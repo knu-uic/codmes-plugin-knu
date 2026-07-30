@@ -21,7 +21,9 @@ jobs:
       - name: Checkout Codmes validator
         uses: actions/checkout@v6
         with:
-          repository: "${{ github.repository_owner }}/Codmes"
+          # Community plugins can live under any GitHub owner. Always validate
+          # against the official Codmes repository instead of assuming a sibling.
+          repository: knu-uic/Codmes
           ref: 2cebf45455aca6e204eaef3417a1fd9161f37b9e
           path: codmes
 
