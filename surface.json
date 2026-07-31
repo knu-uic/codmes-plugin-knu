@@ -15,6 +15,7 @@
       "document": {
         "schemaVersion": 1,
         "presentation": "collection",
+        "collectionStyle": "cards",
         "title": "공지사항",
         "subtitle": {
           "literal": "최신 학사·일반 공지를 확인하세요."
@@ -47,14 +48,18 @@
           "item": {
             "id": "url",
             "title": "title",
-            "subtitle": {
-              "join": ["source_name", "posted_at"],
+            "eyebrow": {
+              "join": ["source_name", "department"],
               "separator": " · "
             },
+            "meta": "posted_at",
+            "badge": "deadline_label",
+            "badgeTone": "deadline_tone",
+            "systemImage": {"literal": "bell"},
             "body": {
               "coalesce": ["summary", "content"]
             },
-            "tags": ["category", "target"],
+            "tags": ["category", "target", "keywords"],
             "filterValues": {
               "category": "category"
             },
@@ -84,6 +89,7 @@
       "document": {
         "schemaVersion": 1,
         "presentation": "collection",
+        "collectionStyle": "cards",
         "title": "LMS",
         "subtitle": {
           "literal": "과제와 학습 일정을 확인하세요."
@@ -113,10 +119,15 @@
           "item": {
             "id": "id",
             "title": "title",
-            "subtitle": {
-              "join": ["course_name", "due_date"],
-              "separator": " · "
+            "eyebrow": "course_name",
+            "meta": "due_date",
+            "badge": "task_type",
+            "badgeTone": {
+              "path": "is_done",
+              "trueValue": "success",
+              "falseValue": "accent"
             },
+            "systemImage": {"literal": "checklist"},
             "tags": ["task_type"],
             "filterValues": {
               "status": {
@@ -236,7 +247,7 @@
       ],
       "document": {
         "schemaVersion": 1,
-        "presentation": "collection",
+        "presentation": "dashboard",
         "title": "KNU 설정",
         "subtitle": {
           "join": [
@@ -247,33 +258,53 @@
         },
         "filters": [],
         "emptyState": {
-          "title": "설정할 항목이 없어요.",
-          "systemImage": "gearshape"
+          "title": "포털 계정 정보를 불러올 수 없어요.",
+          "systemImage": "person.crop.circle.badge.exclamationmark"
         },
-        "collection": {
-          "staticItems": [
-            {
-              "id": {"literal": "account"},
-              "title": {"literal": "공주대 포털 계정"},
-              "subtitle": {"path": "profile.student_id"},
-              "body": {"literal": "포털 인증 토큰은 Codmes 서버에만 저장되며 비밀번호는 저장하지 않습니다."},
-              "tags": [{"literal": "로그인됨"}]
-            },
-            {
-              "id": {"literal": "student"},
-              "title": {"literal": "학교 서비스"},
-              "subtitle": {"path": "profile.student_id"},
-              "body": {"literal": "검증된 학번으로 포털 및 LMS 데이터를 사용합니다."},
-              "tags": [
-                {
-                  "path": "profile.portal_linked",
+        "sections": [
+          {
+            "id": {"literal": "account"},
+            "title": {"literal": "공주대 포털 계정"},
+            "subtitle": {"literal": "로그인과 동기화 상태"},
+            "systemImage": "person.crop.circle.badge.checkmark",
+            "kind": "keyValue",
+            "includeWhenEmpty": true,
+            "fields": [
+              {"id": "student-id", "label": "학번", "value": {"path": "$.profile.student_id"}},
+              {"id": "name", "label": "이름", "value": {"path": "$.profile.name"}},
+              {"id": "major", "label": "학과", "value": {"path": "$.profile.major"}},
+              {"id": "year", "label": "학년", "value": {"path": "$.profile.year", "suffix": "학년"}},
+              {
+                "id": "portal-status",
+                "label": "포털",
+                "value": {
+                  "path": "$.profile.portal_linked",
                   "trueValue": "연결됨",
                   "falseValue": "동기화 중"
                 }
-              ]
-            }
-          ]
-        }
+              }
+            ]
+          },
+          {
+            "id": {"literal": "privacy"},
+            "title": {"literal": "인증 정보"},
+            "systemImage": "lock.shield",
+            "kind": "keyValue",
+            "includeWhenEmpty": true,
+            "fields": [
+              {
+                "id": "storage",
+                "label": "저장 방식",
+                "value": {"literal": "비밀번호는 저장하지 않고 발급된 세션만 Codmes 서버에 보관합니다."}
+              },
+              {
+                "id": "scope",
+                "label": "공지 범위",
+                "value": {"literal": "학교 공통 공지와 로그인 사용자의 학과 공지를 함께 표시합니다."}
+              }
+            ]
+          }
+        ]
       }
     }
   ]

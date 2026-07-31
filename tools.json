@@ -28,7 +28,8 @@
             "description": "판정 기준일 yyyy-mm-dd. 생략하면 KNU 서버의 오늘 날짜"
           },
           "department": {
-            "type": "string"
+            "type": "string",
+            "description": "특정 학과 공지를 명시적으로 조회할 때만 사용합니다. 생략하면 로그인 학적정보의 학과와 학교 공통 공지를 자동 조회합니다."
           },
           "grade": {
             "type": "integer",
@@ -75,8 +76,9 @@
             "type": "string",
             "description": "찾으려는 구체적인 사실이나 절차"
           },
-          "major": {
-            "type": "string"
+          "department": {
+            "type": "string",
+            "description": "특정 학과로 범위를 바꿀 때만 사용합니다. 생략하면 로그인 사용자의 학과와 학교 공통 공지를 자동 조회합니다."
           },
           "category": {
             "type": "string",

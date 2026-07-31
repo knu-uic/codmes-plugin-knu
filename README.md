@@ -13,10 +13,15 @@ KNU API/MCP 서버가 담당합니다.
 - 공지, LMS, 포털, 설정으로 구성된 Codmes 네이티브 Surface
 - 공주대 포털 계정 연결과 로그인 상태 표시
 - 공지 검색 및 상세 근거 조회 MCP 도구
+- 로그인 학적정보를 이용한 학교 공통·사용자 학과 공지 자동 범위 설정
 - macOS, iOS와 iPadOS 지원
 
 KNU 웹사이트를 WebView나 iframe으로 열지 않습니다. `surface.json`이 화면 구조와
 데이터 바인딩을 선언하고, Codmes Apple 클라이언트가 SwiftUI로 렌더링합니다.
+공지와 LMS는 standalone React 웹의 정보 계층을 반영해 출처·학과, 게시일·마감일,
+상태 badge, 요약과 tag가 구분된 native card로 표시합니다. React의 CSS를 복사하는
+방식이 아니라 Codmes 공용 card 규격을 사용하므로 macOS와 iPhone/iPad에서 같은
+내용을 각 플랫폼에 맞는 UI로 보여줍니다.
 
 ## 파일 구성
 
@@ -61,6 +66,11 @@ node bin/codmes.mjs plugin install \
 공유하므로 일반 사용자가 `MCP_AUTH_TOKEN`을 알거나 직접 입력할 필요가 없습니다.
 로그아웃하면 KNU 서버의 현재 세션을 폐기한 뒤 Codmes 서버에 저장된 두 credential도
 함께 삭제합니다.
+
+MCP 호출에서 학과를 생략하면 KNU 서버가 해당 session의 학적정보를 확인해 학교
+공통 공지와 사용자의 학과 공지를 함께 조회합니다. 다른 학과 공지는 기본 결과에서
+제외되며, 사용자가 다른 학과를 명시적으로 물었을 때만 AI가 `department` 인자로
+범위를 바꿉니다.
 
 `MCP_AUTH_TOKEN`은 KNU 서버 운영자가 loopback MCP 게이트웨이를 점검할 때만 쓰는
 내부용 비밀값입니다. 일반 사용자 설치 정보나 plugin manifest에 포함하지 않습니다.
