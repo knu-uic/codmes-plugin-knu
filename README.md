@@ -80,18 +80,34 @@ MCP 호출에서 학과를 생략하면 KNU 서버가 해당 session의 학적�
 Marketplace에는 이 Git 저장소 자체가 아니라 `plugin.json`, `surface.json`,
 `tools.json`을 묶어 Publisher 키로 서명한 `.codmes-plugin` 파일을 배포합니다.
 
-배포 순서는 다음과 같습니다.
+초기 설정으로 저장소 Actions secret 두 개를 등록합니다.
 
-1. KNU API와 플러그인의 데이터 계약을 로컬에서 확인합니다.
-2. 플러그인 버전을 올리고 설치 테스트를 실행합니다.
-3. Publisher 키로 `.codmes-plugin` package를 서명합니다.
-4. package와 Registry 변경을 Codmes Marketplace에 Pull Request로 제출합니다.
-5. Marketplace의 공식 Actions가 manifest, 권한, SHA-256, Publisher 서명을
-   최종 검증합니다.
+- `CODMES_PLUGIN_SIGNING_KEY`: KNU Publisher Ed25519 개인키 PEM
+- `MARKETPLACE_AUTOMATION_TOKEN`: 같은 조직의 `Codmes-Marketplace` 저장소에
+  Contents와 Pull requests 쓰기 권한을 가진 fine-grained token 또는 GitHub App token
 
-이 저장소의 CI는 Codmes 저장소를 checkout하지 않습니다. Community plugin은
-개인이나 외부 조직이 소유할 수 있으며, 공식 검증 책임은 Marketplace PR에
-있습니다.
+개인키와 token은 package나 Git 기록에 포함되지 않고 Actions 실행 중에만 임시
+파일로 복원한 뒤 삭제됩니다. Release workflow는 fork의 Pull Request에서는 실행되지
+않고 이 공식 저장소에서 관리자가 Release를 발행할 때만 secret을 사용합니다.
+
+초기 설정 후 배포 순서는 다음 세 단계뿐입니다.
+
+1. `plugin.json`의 버전을 올리고 변경사항을 tag로 만듭니다.
+2. 해당 tag로 GitHub Release를 발행하고 릴리스 노트를 작성합니다.
+3. 자동 생성된 Marketplace Pull Request를 검수하고 병합합니다.
+
+Release가 발행되면 `publish-marketplace.yml`이 Publisher 키로 package를 서명하고
+`registry/packages/knu-plugin/<version>.codmes-plugin`에 배치합니다. 이어서 SHA-256,
+서명, 버전, 경로, 릴리스 노트와 Registry 시간을 자동 갱신하고 전체 검증을 통과한
+경우에만 `release/knu-plugin-<version>` 브랜치와 Pull Request를 생성합니다. 동일한
+package를 GitHub Release asset에도 첨부하므로 Marketplace와 Release가 완전히 같은
+byte를 보관합니다. `index.json`을 사람이 직접 편집할 필요가 없습니다.
+
+KNU 자동 발행 workflow는 서명과 Registry 생성을 위해 검증된 Codmes Publisher CLI
+commit을 읽습니다. Marketplace PR의 별도 Actions가 결과물을 다시 검증하므로 자동화
+token만으로 검수 절차를 우회하거나 `main`에 직접 배포할 수는 없습니다. 일반
+Community plugin은 Marketplace 쓰기 token을 받지 않으며 자신의 fork에서 PR을
+제출하는 기존 흐름을 사용합니다.
 
 일반 사용자는 소스 저장소를 복제하지 않고 Codmes Marketplace에서 KNU를
 설치하거나 업데이트합니다.
