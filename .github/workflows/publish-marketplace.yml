@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: ${{ github.repository_owner }}/Codmes
-          ref: 988e737408d97941d7322de2c2b4e5b25e3d2908
+          ref: 740c719f59bee09b132f343327bffcd092d9afa9
           path: codmes
 
       - name: Set up Node.js
