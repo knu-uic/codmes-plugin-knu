@@ -105,8 +105,10 @@ Release가 발행되면 `publish-marketplace.yml`이 Publisher 키로 package를
 package를 GitHub Release asset에도 첨부하므로 Marketplace와 Release가 완전히 같은
 byte를 보관합니다. `index.json`을 사람이 직접 편집할 필요가 없습니다.
 
-KNU 자동 발행 workflow는 서명과 Registry 생성을 위해 검증된 Codmes Publisher CLI
-commit을 읽습니다. Marketplace PR의 별도 Actions가 결과물을 다시 검증하므로 자동화
+KNU 자동 발행 workflow는 서명과 Registry 생성을 위해 검증된 Codmes Distribution
+CLI `1.0.0` tag를 사용하고 checkout 후 실제 CLI 버전도 확인합니다. Codmes 앱 자체가
+업데이트되어도 배포 규칙이 바뀌지 않으면 KNU plugin이 이 도구 버전을 따라 올릴
+필요는 없습니다. Marketplace PR의 별도 Actions가 결과물을 다시 검증하므로 자동화
 token만으로 검수 절차를 우회하거나 `main`에 직접 배포할 수는 없습니다. 일반
 Community plugin은 Marketplace 쓰기 token을 받지 않으며 자신의 fork에서 PR을
 제출하는 기존 흐름을 사용합니다.
