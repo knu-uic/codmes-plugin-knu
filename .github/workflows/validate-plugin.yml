@@ -1,0 +1,54 @@
+name: Validate KNU plugin
+
+on:
+  pull_request:
+    paths:
+      - "plugin.json"
+      - "plugin.docker.json"
+      - "surface.json"
+      - "tools.json"
+      - "README.md"
+      - ".github/workflows/publish-marketplace.yml"
+      - ".github/workflows/validate-plugin.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CODMES_DISTRIBUTION_CLI_VERSION: "1.0.0"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout plugin proposal
+        uses: actions/checkout@v6
+        with:
+          path: plugin
+
+      - name: Checkout versioned Codmes Distribution CLI
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ github.repository_owner }}/Codmes
+          ref: codmes-distribution-cli-v${{ env.CODMES_DISTRIBUTION_CLI_VERSION }}
+          path: codmes
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: Install Distribution CLI dependencies
+        working-directory: codmes
+        run: npm install --ignore-scripts
+
+      - name: Verify Distribution CLI version
+        working-directory: codmes
+        run: |
+          actual="$(node bin/codmes.mjs plugin distribution version)"
+          expected="Codmes Distribution CLI $CODMES_DISTRIBUTION_CLI_VERSION (codmes-distribution-cli-v$CODMES_DISTRIBUTION_CLI_VERSION)"
+          test "$actual" = "$expected"
+
+      - name: Validate and package plugin
+        run: node codmes/bin/codmes.mjs plugin pack plugin --output "$RUNNER_TEMP/knu.codmes-plugin"
