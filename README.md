@@ -14,14 +14,16 @@ KNU API/MCP 서버가 담당합니다.
 - 공주대 포털 계정 연결과 로그인 상태 표시
 - 공지 검색 및 상세 근거 조회 MCP 도구
 - 로그인 학적정보를 이용한 학교 공통·사용자 학과 공지 자동 범위 설정
-- macOS, iOS와 iPadOS 지원
+- macOS, iOS, Android, Windows 및 phone/tablet/desktop Surface 지원
 
 KNU 웹사이트를 WebView나 iframe으로 열지 않습니다. `surface.json`이 화면 구조와
-데이터 바인딩을 선언하고, Codmes Apple 클라이언트가 SwiftUI로 렌더링합니다.
+데이터 바인딩을 선언하고, 각 Codmes 클라이언트가 자체 renderer로 표시합니다.
 공지와 LMS는 standalone React 웹의 정보 계층을 반영해 출처·학과, 게시일·마감일,
 상태 badge, 요약과 tag가 구분된 native card로 표시합니다. React의 CSS를 복사하는
-방식이 아니라 Codmes 공용 card 규격을 사용하므로 macOS와 iPhone/iPad에서 같은
-내용을 각 플랫폼에 맞는 UI로 보여줍니다.
+방식이 아니라 Codmes 공용 card 규격을 사용하므로 macOS, iPhone/iPad, Android,
+Windows에서 같은 내용을 각 플랫폼에 맞는 UI로 보여줍니다. 이 선언은 client
+Surface 호환성만 뜻하며 KNU MCP와 검색 도구는 Workspace 서버에서 플랫폼과
+무관하게 실행됩니다.
 
 ## 파일 구성
 
