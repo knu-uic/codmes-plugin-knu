@@ -23,18 +23,15 @@
             "enum": ["current", "historical", "all"],
             "default": "current"
           },
-          "as_of": {
-            "type": "string",
-            "description": "판정 기준일 yyyy-mm-dd. 생략하면 KNU 서버의 오늘 날짜"
-          },
           "department": {
             "type": "string",
-            "description": "특정 학과 공지를 명시적으로 조회할 때만 사용합니다. 생략하면 로그인 학적정보의 학과와 학교 공통 공지를 자동 조회합니다."
+            "enum": ["컴퓨터공학과", "경영학과"],
+            "description": "사용자가 특정 학과를 명시한 경우에만 허용된 학과를 선택합니다. 해당 학과 공지와 학과 제한이 없는 공통 공지를 함께 조회합니다. 공주대·공주대학교처럼 학교 전체를 뜻하거나 학과를 명시하지 않은 질문에서는 생략합니다. 생략하면 로그인 학적정보의 학과와 학교 공통 공지를 자동 조회합니다."
           },
           "grade": {
             "type": "integer",
-            "minimum": 1,
-            "maximum": 4
+            "enum": [1, 2, 3, 4],
+            "description": "사용자가 특정 학년을 명시한 경우에만 선택합니다. 해당 학년 대상 공지와 학년 제한이 없는 전체 학년 공지를 함께 조회합니다. 생략하면 로그인 학적정보의 학년을 자동 적용합니다."
           },
           "year": {
             "type": "integer",
@@ -43,16 +40,6 @@
           },
           "topic": {
             "type": "string"
-          },
-          "sort": {
-            "type": "string",
-            "enum": ["posted_at", "start_date", "end_date"],
-            "default": "posted_at"
-          },
-          "offset": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 0
           }
         }
       },
@@ -78,7 +65,8 @@
           },
           "department": {
             "type": "string",
-            "description": "특정 학과로 범위를 바꿀 때만 사용합니다. 생략하면 로그인 사용자의 학과와 학교 공통 공지를 자동 조회합니다."
+            "enum": ["컴퓨터공학과", "경영학과"],
+            "description": "사용자가 특정 학과를 명시한 경우에만 허용된 학과를 선택합니다. 학교 전체 질문에서는 생략하며, 생략하면 로그인 사용자의 학과와 학교 공통 공지를 자동 조회합니다."
           },
           "category": {
             "type": "string",
