@@ -45,9 +45,7 @@
     "name": "knu",
     "transport": "streamable_http",
     "url": "http://127.0.0.1:8000/api/mcp",
-    "surfaces": [
-      "knu"
-    ],
+    "surfaces": ["chat", "knu"],
     "credentialId": "knu-user-session",
     "requiresApproval": true
   }
