@@ -122,6 +122,86 @@
       },
       "requiresApproval": true,
       "readOnly": true
+    },
+    {
+      "name": "knu_prepare_online_counseling",
+      "description": "공주대 포털에서 기본 지도교수와 선택 가능한 온라인 상담 주제를 조회하는 백그라운드 작업을 시작합니다. 이 도구는 포털 데이터를 변경하지 않습니다.",
+      "group": "knu_counseling",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "provider": {
+        "type": "mcp",
+        "server": "knu",
+        "tool": "knu_prepare_online_counseling"
+      },
+      "requiresApproval": true,
+      "readOnly": true
+    },
+    {
+      "name": "knu_counseling_job_status",
+      "description": "온라인 상담 포털 작업의 진행 상태와 조회 결과를 확인합니다. 이 도구는 포털 데이터를 변경하지 않습니다.",
+      "group": "knu_counseling",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "knu_prepare_online_counseling 또는 knu_submit_online_counseling이 반환한 작업 ID"
+          }
+        },
+        "required": ["job_id"]
+      },
+      "provider": {
+        "type": "mcp",
+        "server": "knu",
+        "tool": "knu_counseling_job_status"
+      },
+      "requiresApproval": true,
+      "readOnly": true
+    },
+    {
+      "name": "knu_submit_online_counseling",
+      "description": "기본 지도교수에게 온라인 상담을 저장합니다. 사용자가 제목, 내용, 상담 주제를 확인하고 명시적으로 제출하라고 말한 경우에만 호출합니다.",
+      "group": "knu_counseling",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "topics": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {"type": "string"}
+          },
+          "confirmed": {
+            "type": "string",
+            "enum": ["submit"],
+            "description": "사용자가 명시적으로 제출을 확인한 경우에만 submit을 사용합니다."
+          }
+        },
+        "required": ["title", "content", "topics", "confirmed"]
+      },
+      "provider": {
+        "type": "mcp",
+        "server": "knu",
+        "tool": "knu_submit_online_counseling"
+      },
+      "requiresApproval": true,
+      "readOnly": false
     }
   ]
 }
