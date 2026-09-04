@@ -6,7 +6,6 @@ on:
       - "plugin.json"
       - "plugin.docker.json"
       - "surface.json"
-      - "tools.json"
       - "README.md"
       - ".github/workflows/publish-marketplace.yml"
       - ".github/workflows/validate-plugin.yml"

@@ -12,7 +12,7 @@ KNU API/MCP 서버가 담당합니다.
 
 - 공지, LMS, 포털, 설정으로 구성된 Codmes 네이티브 Surface
 - 공주대 포털 계정 연결과 로그인 상태 표시
-- 공지 검색 및 상세 근거 조회 MCP 도구
+- 공지 검색과 로그인 사용자의 포털·LMS 조회 MCP 도구
 - 로그인 학적정보를 이용한 학교 공통·사용자 학과 공지 자동 범위 설정
 - macOS, iOS, Android, Windows 및 phone/tablet/desktop Surface 지원
 
@@ -30,9 +30,16 @@ Surface 호환성만 뜻하며 KNU MCP와 검색 도구는 Workspace 서버에�
 ```text
 plugin.json          플러그인, Surface, 인증과 MCP 연결 manifest
 surface.json         공지·LMS·포털·설정 화면 선언
-tools.json           AI가 사용할 공지 검색·상세 조회 도구 선언
 plugin.docker.json   Docker/Caddy 배포 주소를 사용하는 대체 manifest
 ```
+
+AI 도구의 설명·입력 schema·계층 그룹은 KNU MCP 서버의 `tools/list`가 직접
+제공합니다. 따라서 인자나 설명을 바꿀 때 이 플러그인에 같은 내용을 다시 복사하지
+않습니다. 처음 발견한 도구는 Codmes Workspace의 Plugin 설정에서 사용자가
+승인할 때까지 모델에게 노출되지 않습니다. KNU MCP가 나중에 새 도구를 추가하면
+플러그인 배포는 필요 없지만, 그 도구는 다시 대기 상태로 표시되고 각 Workspace의
+사용자가 별도로 승인해야 합니다. 플러그인은 KNU Surface, 서버 주소, 로그인
+credential, Surface 범위와 호출 승인 정책만 소유합니다.
 
 ## 개발 환경
 
@@ -87,13 +94,26 @@ MCP 호출에서 학과를 생략하면 KNU 서버가 해당 session의 학적�
 컴퓨터공학과 3학년 사용자가 `경영학과 + 2학년`을 요청하면 경영학과 2학년 대상
 공지와 경영학과의 전체 학년 공통 공지를 함께 조회합니다.
 
+AI 도구는 `knu.notices`, `knu.lms`, `knu.portal`, `knu.account` 그룹으로
+나뉩니다. Codmes는 모든 schema를 한 번에 모델에 보내지 않고 `tool_discovery`로
+Surface와 하위 그룹을 단계적으로 탐색한 뒤 선택된 그룹만 현재 대화 turn에
+활성화합니다. 현재 KNU 메뉴는 추천 문맥일 뿐입니다. 예를 들어 LMS 메뉴에서
+누적성적을 물어도 모델은 `knu.portal`을 선택할 수 있습니다.
+
+공지 목록·개수·마감 상태에는 `knu_list_notices`를 사용하고, 특정 공지의 방법·절차·
+본문·첨부·그림에는 `knu_search_notice_details`를 사용합니다. 로그인 사용자 데이터는
+`knu_get_portal_academic_data`, `knu_list_lms_tasks`, `knu_list_lms_courses`,
+`knu_get_student_profile`로 읽습니다. 이 도구들은 읽기 전용이며 사용자 session
+token이나 포털 비밀번호를 모델 인자로 전달하지 않습니다.
+
 `MCP_AUTH_TOKEN`은 KNU 서버 운영자가 loopback MCP 게이트웨이를 점검할 때만 쓰는
 내부용 비밀값입니다. 일반 사용자 설치 정보나 plugin manifest에 포함하지 않습니다.
 
 ## Marketplace 배포
 
-Marketplace에는 이 Git 저장소 자체가 아니라 `plugin.json`, `surface.json`,
-`tools.json`을 묶어 Publisher 키로 서명한 `.codmes-plugin` 파일을 배포합니다.
+Marketplace에는 이 Git 저장소 자체가 아니라 `plugin.json`, `surface.json`을 묶어
+Publisher 키로 서명한 `.codmes-plugin` 파일을 배포합니다. 도구 catalog는 설치
+package의 복사본이 아니라 연결된 KNU MCP 서버에서 동적으로 읽습니다.
 
 초기 설정으로 저장소 Actions secret 두 개를 등록합니다.
 
