@@ -94,14 +94,18 @@ MCP 호출에서 학과를 생략하면 KNU 서버가 해당 session의 학적�
 컴퓨터공학과 3학년 사용자가 `경영학과 + 2학년`을 요청하면 경영학과 2학년 대상
 공지와 경영학과의 전체 학년 공통 공지를 함께 조회합니다.
 
-AI 도구는 `knu.notices`, `knu.lms`, `knu.portal`, `knu.account` 그룹으로
+AI 도구는 `knu.notice`, `knu.academic`, `knu.lms`, `knu.portal`, `knu.account` 그룹으로
 나뉩니다. Codmes는 모든 schema를 한 번에 모델에 보내지 않고 `tool_discovery`로
 Surface와 하위 그룹을 단계적으로 탐색한 뒤 선택된 그룹만 현재 대화 turn에
 활성화합니다. 현재 KNU 메뉴는 추천 문맥일 뿐입니다. 예를 들어 LMS 메뉴에서
 누적성적을 물어도 모델은 `knu.portal`을 선택할 수 있습니다.
 
 공지 목록·개수·마감 상태에는 `knu_list_notices`를 사용하고, 특정 공지의 방법·절차·
-본문·첨부·그림에는 `knu_search_notice_details`를 사용합니다. 로그인 사용자 데이터는
+본문·첨부·그림에는 `knu_search_notice_details`를 사용합니다. 두 도구는 실제 게시
+공지인 `source.kind=notice`만 조회합니다. 교과과정표·장학안내처럼 게시일이 없는 상시
+학사정보는 `knu_list_academic_documents`, `knu_search_academic_details`,
+`knu_get_academic_detail`을 사용하며 `source.kind=academic`만 조회합니다.
+로그인 사용자 데이터는
 `knu_get_portal_academic_data`, `knu_list_lms_tasks`, `knu_list_lms_courses`,
 `knu_get_student_profile`로 읽습니다. 이 도구들은 읽기 전용이며 사용자 session
 token이나 포털 비밀번호를 모델 인자로 전달하지 않습니다.

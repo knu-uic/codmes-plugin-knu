@@ -59,7 +59,7 @@
             "body": {
               "coalesce": ["summary", "content"]
             },
-            "tags": ["category", "target", "keywords"],
+            "tags": ["category", "target"],
             "filterValues": {
               "category": "category"
             },
